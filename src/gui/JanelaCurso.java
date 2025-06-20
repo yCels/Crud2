@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import javax.swing.JOptionPane;
+import modelo.Curso;
+import dao.CursoDAO;
 
 /**
  *
@@ -12,12 +10,20 @@ import javax.swing.JOptionPane;
  */
 public class JanelaCurso extends javax.swing.JFrame {
 
+    private CursoDAO cursoDAO = new CursoDAO();
+    private Curso cursoSelecionado = null;
+
     /**
      * Creates new form JanelaCurso
      */
     public JanelaCurso() {
         initComponents();
     }
+    
+    cuzniho
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,9 +40,9 @@ public class JanelaCurso extends javax.swing.JFrame {
         txtCargaHoraria = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtLimiteAlunos = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        chkAtivo = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCursos = new javax.swing.JTable();
         bntNovo = new javax.swing.JButton();
         bntExcluir = new javax.swing.JButton();
         bntEditar = new javax.swing.JButton();
@@ -75,25 +81,27 @@ public class JanelaCurso extends javax.swing.JFrame {
         });
         getContentPane().add(txtLimiteAlunos, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
 
-        jCheckBox1.setText("Ativo");
-        getContentPane().add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, -1, -1));
+        chkAtivo.setText("Ativo");
+        getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, -1, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nome Curso", "Carga Horaria", "limite Alunos", "Ativo"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblCursos);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 220, 20));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 220, 40));
 
         bntNovo.setText("Novo");
+        bntNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntNovoActionPerformed(evt);
+            }
+        });
         getContentPane().add(bntNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, -1, -1));
 
         bntExcluir.setText("Excluir");
@@ -129,8 +137,74 @@ public class JanelaCurso extends javax.swing.JFrame {
 
     private void bntSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSalvarActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Cliquei em Salvar!");
+        // Validação
+        String nome = txtNomeCurso.getText().trim();
+        String cargaStr = txtCargaHoraria.getText().trim();
+        String limiteStr = txtLimiteAlunos.getText().trim();
+
+        if (nome.length() < 3) {
+            JOptionPane.showMessageDialog(this, "Nome deve ter pelo menos 3 caracteres.");
+            return;
+        }
+        int carga;
+        try {
+            carga = Integer.parseInt(cargaStr);
+            if (carga < 20) {
+                JOptionPane.showMessageDialog(this, "Carga horária mínima é 20.");
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Carga horária inválida.");
+            return;
+        }
+        int limite;
+        try {
+            limite = Integer.parseInt(limiteStr);
+            if (limite < 1) {
+                JOptionPane.showMessageDialog(this, "Limite de alunos deve ser pelo menos 1.");
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Limite de alunos inválido.");
+            return;
+        }
+
+        boolean ativo = jCheckBox1.isSelected();
+
+        CursoDAO dao = new CursoDAO();
+        Curso c = new Curso();
+        c.setNome(nome);
+        c.setCargaHoraria(carga);
+        c.setLimiteAlunos(limite);
+        c.setAtivo(ativo);
+
+        // Verifica se está editando ou criando novo
+        int row = jTable1.getSelectedRow();
+        if (row == -1) {
+            // Novo
+            dao.adiciona(c);
+            JOptionPane.showMessageDialog(this, "Curso cadastrado!");
+        } else {
+            // Editar
+            int id = (int) jTable1.getValueAt(row, 0);
+            c.setId(id);
+            dao.altera(c);
+            JOptionPane.showMessageDialog(this, "Curso alterado!");
+        }
+        atualizarTabela();
+        limparCampos();
+
     }//GEN-LAST:event_bntSalvarActionPerformed
+
+    private void bntNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNovoActionPerformed
+        // TODO add your handling code here:
+        txtNomeCurso.setText("");
+        txtCargaHoraria.setText("");
+        txtLimiteAlunos.setText("");
+        chkAtivo.setSelected(true);
+        cursoSelecionado = null;
+        tblCursos.clearSelection();
+    }//GEN-LAST:event_bntNovoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,12 +248,12 @@ public class JanelaCurso extends javax.swing.JFrame {
     private javax.swing.JButton bntNovo;
     private javax.swing.JButton bntReativar;
     private javax.swing.JButton bntSalvar;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox chkAtivo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblCursos;
     private javax.swing.JTextField txtCargaHoraria;
     private javax.swing.JTextField txtLimiteAlunos;
     private javax.swing.JTextField txtNomeCurso;

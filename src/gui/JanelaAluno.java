@@ -4,17 +4,32 @@
  */
 package gui;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author CELSO
  */
 public class JanelaAluno extends javax.swing.JFrame {
 
+    private DefaultTableModel modeloTabela;
+
     /**
      * Creates new form JanelaAluno
      */
     public JanelaAluno() {
         initComponents();
+        modeloTabela = (DefaultTableModel) tblAlunos.getModel();
+    }
+
+    private void limparCampos() {
+        txtNome.setText("");
+        txtCpf.setText("");
+        txtEmail.setText("");
+        txtDataNascimento.setText("");
+        cbCurso.setSelectedIndex(0);
+        chkAtivo.setSelected(false);
     }
 
     /**
@@ -26,21 +41,177 @@ public class JanelaAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        N = new javax.swing.JLabel();
+        C = new javax.swing.JLabel();
+        E = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+        txtCpf = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
+        cbCurso = new javax.swing.JComboBox<>();
+        chkAtivo = new javax.swing.JCheckBox();
+        bntSalvar = new javax.swing.JButton();
+        bntExcluir = new javax.swing.JButton();
+        bntLimpar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblAlunos = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        txtDataNascimento = new javax.swing.JTextField();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        N.setText("Nome");
+        getContentPane().add(N, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+
+        C.setText("Cpf");
+        getContentPane().add(C, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+
+        E.setText("Email");
+        getContentPane().add(E, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
+
+        txtNome.setText("jTextField1");
+        getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
+
+        txtCpf.setText("jTextField2");
+        getContentPane().add(txtCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, -1));
+
+        txtEmail.setText("jTextField3");
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, -1, 20));
+
+        cbCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCursoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cbCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 20));
+
+        chkAtivo.setText("jCheckBox1");
+        chkAtivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkAtivoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, -1, 20));
+
+        bntSalvar.setText("Salvar");
+        bntSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntSalvarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
+
+        bntExcluir.setText("Excluir");
+        bntExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntExcluirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, -1, -1));
+
+        bntLimpar.setText("Limpar");
+        bntLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntLimparActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntLimpar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 230, -1, -1));
+
+        tblAlunos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "Cpf", "Email", "Data Nascimento", "Curso", "Ativo"
+            }
+        ));
+        jScrollPane2.setViewportView(tblAlunos);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 300, 130));
+
+        jLabel1.setText("Data NAsc");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, -1));
+
+        txtDataNascimento.setText("jTextField4");
+        getContentPane().add(txtDataNascimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cbCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCursoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbCursoActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void chkAtivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAtivoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkAtivoActionPerformed
+
+    private void bntSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSalvarActionPerformed
+        // TODO add your handling code here:
+        // Pega valores dos campos
+        String nome = txtNome.getText();
+        String cpf = txtCpf.getText();
+        String email = txtEmail.getText();
+        String dataNasc = txtDataNascimento.getText();
+        String curso = cbCurso.getSelectedItem().toString();
+        boolean ativo = chkAtivo.isSelected();
+
+        // Gera um ID simples (exemplo: quantidade de linhas + 1)
+        int id = modeloTabela.getRowCount() + 1;
+
+        // Adiciona linha na tabela
+        modeloTabela.addRow(new Object[]{
+            id, nome, cpf, email, dataNasc, curso, ativo
+        });
+
+        // Limpa os campos (opcional)
+        limparCampos();
+
+
+    }//GEN-LAST:event_bntSalvarActionPerformed
+
+    private void bntExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExcluirActionPerformed
+        // TODO add your handling code here:
+        int linhaSelecionada = tblAlunos.getSelectedRow();
+        if (linhaSelecionada != -1) {
+            modeloTabela.removeRow(linhaSelecionada);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.");
+        }
+
+    }//GEN-LAST:event_bntExcluirActionPerformed
+
+    private void bntLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntLimparActionPerformed
+        // TODO add your handling code here:
+        modeloTabela.setRowCount(0);
+        
+    }//GEN-LAST:event_bntLimparActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +249,22 @@ public class JanelaAluno extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel C;
+    private javax.swing.JLabel E;
+    private javax.swing.JLabel N;
+    private javax.swing.JButton bntExcluir;
+    private javax.swing.JButton bntLimpar;
+    private javax.swing.JButton bntSalvar;
+    private javax.swing.JComboBox<String> cbCurso;
+    private javax.swing.JCheckBox chkAtivo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblAlunos;
+    private javax.swing.JTextField txtCpf;
+    private javax.swing.JTextField txtDataNascimento;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 }
