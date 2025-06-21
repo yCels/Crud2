@@ -3,6 +3,8 @@ package gui;
 import javax.swing.JOptionPane;
 import modelo.Curso;
 import dao.CursoDAO;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,12 +20,43 @@ public class JanelaCurso extends javax.swing.JFrame {
      */
     public JanelaCurso() {
         initComponents();
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Nome", "Carga Horária", "Limite", "Ativo"}
+        ) {
+            boolean[] canEdit = new boolean[]{false, false, false, false, false};
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        tblCursos.setModel(model);
+        atualizarTabela();
     }
-    
-    cuzniho
-    
-    
-    
+
+    private void atualizarTabela() {
+        CursoDAO dao = new CursoDAO();
+        List<Curso> cursos = dao.getLista();
+        DefaultTableModel model = (DefaultTableModel) tblCursos.getModel();
+        model.setRowCount(0); // Limpa a tabela
+        for (Curso c : cursos) {
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getCargaHoraria(),
+                c.getLimiteAlunos(),
+                c.isAtivo() ? "Sim" : "Não"
+            });
+        }
+    }
+
+    private void limparCampos() {
+        txtNomeCurso.setText("");
+        txtLimiteAlunos.setText("");
+        txtCargaHoraria.setText("");
+        chkAtivo.setSelected(true);
+        tblCursos.clearSelection();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -94,7 +127,7 @@ public class JanelaCurso extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblCursos);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 220, 40));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 400, 130));
 
         bntNovo.setText("Novo");
         bntNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -102,13 +135,23 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntNovoActionPerformed(evt);
             }
         });
-        getContentPane().add(bntNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, -1, -1));
+        getContentPane().add(bntNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, -1, -1));
 
         bntExcluir.setText("Excluir");
-        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 170, -1, -1));
+        bntExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntExcluirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 240, -1, -1));
 
         bntEditar.setText("Editar");
-        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, -1, -1));
+        bntEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntEditarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
 
         bntSalvar.setText("Salvar");
         bntSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -116,13 +159,23 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, -1, -1));
+        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, -1, -1));
 
         bntInativar.setText("Inativar");
-        getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, -1, -1));
+        bntInativar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntInativarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 240, -1, -1));
 
         bntReativar.setText("Reativar");
-        getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 170, -1, -1));
+        bntReativar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntReativarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -137,11 +190,9 @@ public class JanelaCurso extends javax.swing.JFrame {
 
     private void bntSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSalvarActionPerformed
         // TODO add your handling code here:
-        // Validação
         String nome = txtNomeCurso.getText().trim();
         String cargaStr = txtCargaHoraria.getText().trim();
         String limiteStr = txtLimiteAlunos.getText().trim();
-
         if (nome.length() < 3) {
             JOptionPane.showMessageDialog(this, "Nome deve ter pelo menos 3 caracteres.");
             return;
@@ -168,25 +219,19 @@ public class JanelaCurso extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Limite de alunos inválido.");
             return;
         }
-
-        boolean ativo = jCheckBox1.isSelected();
-
+        boolean ativo = chkAtivo.isSelected();
         CursoDAO dao = new CursoDAO();
         Curso c = new Curso();
         c.setNome(nome);
         c.setCargaHoraria(carga);
         c.setLimiteAlunos(limite);
         c.setAtivo(ativo);
-
-        // Verifica se está editando ou criando novo
-        int row = jTable1.getSelectedRow();
+        int row = tblCursos.getSelectedRow();
         if (row == -1) {
-            // Novo
             dao.adiciona(c);
             JOptionPane.showMessageDialog(this, "Curso cadastrado!");
         } else {
-            // Editar
-            int id = (int) jTable1.getValueAt(row, 0);
+            int id = (int) tblCursos.getValueAt(row, 0);
             c.setId(id);
             dao.altera(c);
             JOptionPane.showMessageDialog(this, "Curso alterado!");
@@ -194,17 +239,84 @@ public class JanelaCurso extends javax.swing.JFrame {
         atualizarTabela();
         limparCampos();
 
+
     }//GEN-LAST:event_bntSalvarActionPerformed
 
     private void bntNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNovoActionPerformed
-        // TODO add your handling code here:
-        txtNomeCurso.setText("");
-        txtCargaHoraria.setText("");
-        txtLimiteAlunos.setText("");
-        chkAtivo.setSelected(true);
-        cursoSelecionado = null;
-        tblCursos.clearSelection();
+        // TODO add your handling code here
+        limparCampos();
+
+
     }//GEN-LAST:event_bntNovoActionPerformed
+
+    private void bntEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntEditarActionPerformed
+        // TODO add your handling code here:
+        int row = tblCursos.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um curso para editar.");
+            return;
+        }
+        int id = (int) tblCursos.getValueAt(row, 0);
+        CursoDAO dao = new CursoDAO();
+        Curso c = dao.buscaPorId(id);
+        if (c != null) {
+            txtNomeCurso.setText(c.getNome());
+            txtCargaHoraria.setText(String.valueOf(c.getCargaHoraria()));
+            txtLimiteAlunos.setText(String.valueOf(c.getLimiteAlunos()));
+            chkAtivo.setSelected(c.isAtivo());
+        }
+    }//GEN-LAST:event_bntEditarActionPerformed
+
+    private void bntExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExcluirActionPerformed
+        // TODO add your handling code here:
+        int row = tblCursos.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um curso para excluir.");
+            return;
+        }
+        int id = (int) tblCursos.getValueAt(row, 0);
+        CursoDAO dao = new CursoDAO();
+        Curso c = dao.buscaPorId(id);
+        if (c != null) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Excluir o curso? Esta ação é irreversível.",
+                    "Confirmação", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dao.remove(c);
+                atualizarTabela();
+                limparCampos();
+                JOptionPane.showMessageDialog(this, "Curso excluído.");
+            }
+        }
+    }//GEN-LAST:event_bntExcluirActionPerformed
+
+    private void bntInativarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntInativarActionPerformed
+        // TODO add your handling code here:
+        int row = tblCursos.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um curso para inativar.");
+            return;
+        }
+        int id = (int) tblCursos.getValueAt(row, 0);
+        CursoDAO dao = new CursoDAO();
+        dao.desativar(id);
+        atualizarTabela();
+        JOptionPane.showMessageDialog(this, "Curso inativado.");
+    }//GEN-LAST:event_bntInativarActionPerformed
+
+    private void bntReativarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntReativarActionPerformed
+        // TODO add your handling code here:
+        int row = tblCursos.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um curso para reativar.");
+            return;
+        }
+        int id = (int) tblCursos.getValueAt(row, 0);
+        CursoDAO dao = new CursoDAO();
+        dao.reativar(id);
+        atualizarTabela();
+        JOptionPane.showMessageDialog(this, "Curso reativado.");
+    }//GEN-LAST:event_bntReativarActionPerformed
 
     /**
      * @param args the command line arguments

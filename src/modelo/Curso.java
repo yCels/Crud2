@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Curso {
+
     private int id;
     private String nome;
     private int cargaHoraria;
@@ -12,7 +13,8 @@ public class Curso {
     private List<Aluno> alunos = new ArrayList<>();
 
     // Construtores
-    public Curso() {}
+    public Curso() {
+    }
 
     public Curso(String nome, int cargaHoraria, int limiteAlunos) {
         this.nome = nome;
@@ -22,21 +24,57 @@ public class Curso {
     }
 
     // Getters e Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getCargaHoraria() { return cargaHoraria; }
-    public void setCargaHoraria(int cargaHoraria) { this.cargaHoraria = cargaHoraria; }
+    public String getNome() {
+        return nome;
+    }
 
-    public int getLimiteAlunos() { return limiteAlunos; }
-    public void setLimiteAlunos(int limiteAlunos) { this.limiteAlunos = limiteAlunos; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public boolean isAtivo() { return ativo; }
-    public void setAtivo(boolean ativo) { this.ativo = ativo; }
+    public int getCargaHoraria() {
+        return cargaHoraria;
+    }
 
-    public List<Aluno> getAlunos() { return alunos; }
-    public void setAlunos(List<Aluno> alunos) { this.alunos = alunos; }
+    public void setCargaHoraria(int cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+    }
+
+    public int getLimiteAlunos() {
+        return limiteAlunos;
+    }
+
+    public void setLimiteAlunos(int limiteAlunos) {
+        this.limiteAlunos = limiteAlunos;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
+
 }

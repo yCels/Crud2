@@ -29,8 +29,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        bntCurso = new javax.swing.JButton();
-        bntAluno = new javax.swing.JButton();
+        bntJanelaCurso = new javax.swing.JButton();
+        bntJanelaAluno = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -40,35 +40,35 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel1.setToolTipText("");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 0, 151, -1));
 
-        bntCurso.setText("gerenciar curso");
-        bntCurso.addActionListener(new java.awt.event.ActionListener() {
+        bntJanelaCurso.setText("gerenciar curso");
+        bntJanelaCurso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntCursoActionPerformed(evt);
+                bntJanelaCursoActionPerformed(evt);
             }
         });
-        getContentPane().add(bntCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
+        getContentPane().add(bntJanelaCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
 
-        bntAluno.setText("gerenciar aluno");
-        bntAluno.setToolTipText("");
-        bntAluno.addActionListener(new java.awt.event.ActionListener() {
+        bntJanelaAluno.setText("gerenciar aluno");
+        bntJanelaAluno.setToolTipText("");
+        bntJanelaAluno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntAlunoActionPerformed(evt);
+                bntJanelaAlunoActionPerformed(evt);
             }
         });
-        getContentPane().add(bntAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, -1, -1));
+        getContentPane().add(bntJanelaAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bntCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCursoActionPerformed
+    private void bntJanelaCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaCursoActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(this, "Botão Cursos clicado!");
-    }//GEN-LAST:event_bntCursoActionPerformed
+    }//GEN-LAST:event_bntJanelaCursoActionPerformed
 
-    private void bntAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAlunoActionPerformed
+    private void bntJanelaAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaAlunoActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(this, "Botão Cursos clicado!");
-    }//GEN-LAST:event_bntAlunoActionPerformed
+    }//GEN-LAST:event_bntJanelaAlunoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,8 +106,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntAluno;
-    private javax.swing.JButton bntCurso;
+    private javax.swing.JButton bntJanelaAluno;
+    private javax.swing.JButton bntJanelaCurso;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
