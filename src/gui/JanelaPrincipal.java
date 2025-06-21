@@ -18,6 +18,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     public JanelaPrincipal() {
         initComponents();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,12 +64,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void bntJanelaCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaCursoActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Botão Cursos clicado!");
+        new JanelaCurso().setVisible(true);
     }//GEN-LAST:event_bntJanelaCursoActionPerformed
 
     private void bntJanelaAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaAlunoActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Botão Cursos clicado!");
+        new JanelaAluno().setVisible(true);
     }//GEN-LAST:event_bntJanelaAlunoActionPerformed
 
     /**
@@ -103,7 +105,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 new JanelaPrincipal().setVisible(true);
             }
         });
+        
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntJanelaAluno;
