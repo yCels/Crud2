@@ -24,6 +24,7 @@ import java.time.LocalDate;
 public class JanelaAluno extends javax.swing.JFrame {
 
     private DefaultTableModel modeloTabela;
+    private java.util.List<Curso> listaCursos;
 
     /**
      * Creates new form JanelaAluno
@@ -192,14 +193,19 @@ public class JanelaAluno extends javax.swing.JFrame {
             String dataNascStr = txtDataNascimento.getText().trim();
             boolean ativo = chkAtivo.isSelected();
 
-            // Agora pegando o objeto Curso diretamente do ComboBox!
-            Curso cursoSelecionado = (Curso) cbCurso.getSelectedItem();
+            int indiceSelecionado = cbCurso.getSelectedIndex();
+            if (indiceSelecionado == -1) {
+                JOptionPane.showMessageDialog(this, "Selecione um curso!");
+                return;
+            }
+            Curso cursoSelecionado = listaCursos.get(indiceSelecionado);
 
             if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || dataNascStr.isEmpty() || cursoSelecionado == null) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
                 return;
             }
 
+            // Aqui o importante: o formato deve ser o mesmo usado ao editar!
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
 
@@ -272,13 +278,13 @@ public class JanelaAluno extends javax.swing.JFrame {
                 txtNome.setText(aluno.getNome());
                 txtCpf.setText(aluno.getCpf());
                 txtEmail.setText(aluno.getEmail());
-                txtDataNascimento.setText(aluno.getDataNascimento().toString());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                txtDataNascimento.setText(aluno.getDataNascimento().format(formatter));
                 chkAtivo.setSelected(aluno.isAtivo());
 
                 // Seleciona o curso correto no ComboBox
-                for (int i = 0; i < cbCurso.getItemCount(); i++) {
-                    Curso curso = (Curso) cbCurso.getItemAt(i);
-                    if (curso.getId() == aluno.getCurso().getId()) {
+                for (int i = 0; i < listaCursos.size(); i++) {
+                    if (listaCursos.get(i).getId() == aluno.getCurso().getId()) {
                         cbCurso.setSelectedIndex(i);
                         break;
                     }
@@ -320,9 +326,9 @@ public class JanelaAluno extends javax.swing.JFrame {
 
     private void preencherComboCursos() {
         cbCurso.removeAllItems();
-        List<Curso> listaCursos = new CursoDAO().getLista();
+        listaCursos = new CursoDAO().getLista();
         for (Curso c : listaCursos) {
-            cbCurso.addItem(c); // Adiciona o próprio objeto Curso
+            cbCurso.addItem(c.getNome()); // Adiciona só o nome do curso!
         }
     }
 
