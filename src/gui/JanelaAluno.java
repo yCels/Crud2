@@ -164,7 +164,7 @@ public class JanelaAluno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCursoActionPerformed
-       
+
     }//GEN-LAST:event_cbCursoActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -319,10 +319,10 @@ public class JanelaAluno extends javax.swing.JFrame {
     }
 
     private void preencherComboCursos() {
-        cbCurso.removeAllItems(); // Limpa o ComboBox
-        List<Curso> listaCursos = new CursoDAO().getLista(); // Ou como for seu método de listar cursos
+        cbCurso.removeAllItems();
+        List<Curso> listaCursos = new CursoDAO().getLista();
         for (Curso c : listaCursos) {
-            cbCurso.addItem(c); // Adiciona o objeto Curso
+            cbCurso.addItem(c); // Adiciona o próprio objeto Curso
         }
     }
 

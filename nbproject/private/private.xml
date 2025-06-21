@@ -5,6 +5,10 @@
         <group>
             <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/gui/JanelaAluno.java</file>
             <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/dao/CursoDAO.java</file>
+            <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/gui/JanelaCurso.java</file>
+            <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/modelo/Curso.java</file>
+            <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/modelo/Aluno.java</file>
+            <file>file:/C:/Users/CELSO/OneDrive%20-%20Fatec%20Centro%20Paula%20Souza/Documentos/NetBeansProjects/CrudFinal/src/dao/AlunoDAO.java</file>
         </group>
     </open-files>
 </project-private>
