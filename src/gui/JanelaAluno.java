@@ -4,18 +4,14 @@
  */
 package gui;
 
+import dao.AlunoDAO;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Aluno;
 import modelo.Curso;
-import dao.AlunoDAO;
 import dao.CursoDAO;
-import java.time.LocalDate;
-import javax.swing.JOptionPane;
-import java.awt.event.ActionEvent;
-import java.util.List;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
 
 /**
  *
@@ -23,17 +19,70 @@ import java.time.LocalDate;
  */
 public class JanelaAluno extends javax.swing.JFrame {
 
-    private DefaultTableModel modeloTabela;
+    // Variável para guardar a lista de cursos (atualize quando abrir a janela ou cadastrar/excluir curso)
     private java.util.List<Curso> listaCursos;
+
+    // Variável para saber qual aluno está sendo editado (null se for novo)
+    private Integer idAlunoEditando = null;
 
     /**
      * Creates new form JanelaAluno
      */
     public JanelaAluno() {
         initComponents();
-        modeloTabela = (DefaultTableModel) tblAlunos.getModel();
         preencherComboCursos();
+        atualizarTabela();
+    }
 
+    private void preencherComboCursos() {
+        cbCurso.removeAllItems(); // Limpa o ComboBox antes de adicionar
+        listaCursos = new CursoDAO().getLista(); // Busca todos os cursos do banco
+        for (Curso c : listaCursos) {
+            cbCurso.addItem(c.getNome()); // Adiciona só o nome no ComboBox
+        }
+    }
+
+    private void limparCampos() {
+        txtNome.setText("");
+        txtCpf.setText("");
+        txtEmail.setText("");
+        txtDataNascimento.setText("");
+        chkAtivo.setSelected(true); // ou false, se preferir desmarcado ao limpar
+        cbCurso.setSelectedIndex(0); // seleciona o primeiro curso da lista
+        idAlunoEditando = null; // reseta a variável de edição
+        tblAlunos.clearSelection(); // desmarca qualquer seleção na tabela
+    }
+
+    private void atualizarTabela() {
+         // Garante que está usando o modelo correto
+    DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
+    model.setRowCount(0); // Limpa todas as linhas
+
+    AlunoDAO alunoDAO = new AlunoDAO();
+    for (Aluno a : alunoDAO.getLista()) {
+        // Pega o nome do curso do objeto Curso já preenchido
+        String nomeCurso = "";
+        if (a.getCurso() != null && a.getCurso().getNome() != null) {
+            nomeCurso = a.getCurso().getNome();
+        }
+        // Formata data
+        String dataNasc = "";
+        if (a.getDataNascimento() != null) {
+            dataNasc = a.getDataNascimento().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+
+        // Adiciona linha na tabela
+        model.addRow(new Object[]{
+            a.getId(),
+            a.getNome(),
+            a.getCpf(),
+            a.getEmail(),
+            dataNasc,
+            nomeCurso,
+            a.isAtivo() ? "Sim" : "Não"
+        });
+    }
+        
     }
 
     /**
@@ -45,73 +94,42 @@ public class JanelaAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        N = new javax.swing.JLabel();
-        C = new javax.swing.JLabel();
-        E = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        bntSalvar = new javax.swing.JButton();
+        bntExcluir = new javax.swing.JButton();
+        bntEditar = new javax.swing.JButton();
+        bntLimpar = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        chkAtivo = new javax.swing.JCheckBox();
+        cbCurso = new javax.swing.JComboBox<>();
         txtNome = new javax.swing.JTextField();
         txtCpf = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
-        cbCurso = new javax.swing.JComboBox<>();
-        chkAtivo = new javax.swing.JCheckBox();
-        bntSalvar = new javax.swing.JButton();
-        bntExcluir = new javax.swing.JButton();
-        bntLimpar = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblAlunos = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
         txtDataNascimento = new javax.swing.JTextField();
-        bntEditar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblAlunos = new javax.swing.JTable();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        jButton6.setText("jButton6");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        N.setText("Nome");
-        getContentPane().add(N, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
+        jLabel1.setText("Nome");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 37, -1));
 
-        C.setText("Cpf");
-        getContentPane().add(C, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+        jLabel2.setText("Cpf");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 34, 37, -1));
 
-        E.setText("Email");
-        getContentPane().add(E, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
-        getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 100, -1));
-        getContentPane().add(txtCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 90, -1));
-        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 100, 20));
+        jLabel3.setText("email");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 62, 37, -1));
 
-        cbCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbCurso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbCursoActionPerformed(evt);
-            }
-        });
-        getContentPane().add(cbCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 20));
-
-        chkAtivo.setText("Ativo");
-        chkAtivo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkAtivoActionPerformed(evt);
-            }
-        });
-        getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, -1, 20));
+        jLabel4.setText("Data NAsc");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 90, 60, -1));
 
         bntSalvar.setText("Salvar");
         bntSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +137,7 @@ public class JanelaAluno extends javax.swing.JFrame {
                 bntSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
+        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
         bntExcluir.setText("Excluir");
         bntExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -127,31 +145,7 @@ public class JanelaAluno extends javax.swing.JFrame {
                 bntExcluirActionPerformed(evt);
             }
         });
-        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, -1, -1));
-
-        bntLimpar.setText("Limpar");
-        bntLimpar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntLimparActionPerformed(evt);
-            }
-        });
-        getContentPane().add(bntLimpar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 230, -1, -1));
-
-        tblAlunos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Nome", "Cpf", "Email", "Data Nascimento", "Curso", "Ativo"
-            }
-        ));
-        jScrollPane2.setViewportView(tblAlunos);
-
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 300, 130));
-
-        jLabel1.setText("Data NAsc");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, -1));
-        getContentPane().add(txtDataNascimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 100, -1));
+        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, -1, -1));
 
         bntEditar.setText("Editar");
         bntEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -159,40 +153,66 @@ public class JanelaAluno extends javax.swing.JFrame {
                 bntEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 230, -1, -1));
+        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 220, -1, -1));
+
+        bntLimpar.setText("Limpar");
+        bntLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntLimparActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntLimpar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
+
+        jButton5.setText("jButton5");
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, -1, -1));
+
+        jButton7.setText("jButton7");
+        getContentPane().add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, -1, -1));
+
+        chkAtivo.setText("jCheckBox1");
+        getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
+
+        cbCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(cbCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, -1, -1));
+
+        txtNome.setText("jTextField1");
+        getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
+
+        txtCpf.setText("jTextField2");
+        getContentPane().add(txtCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, -1, -1));
+
+        txtEmail.setText("jTextField3");
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, -1, -1));
+
+        txtDataNascimento.setText("jTextField4");
+        getContentPane().add(txtDataNascimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, -1, -1));
+
+        tblAlunos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Nome", "Cpf", "email", "data nasc", "curso", "ativo"
+            }
+        ));
+        jScrollPane1.setViewportView(tblAlunos);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 280, 180));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCursoActionPerformed
-
-    }//GEN-LAST:event_cbCursoActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-        cbCurso.removeAllItems();
-        CursoDAO cursoDAO = new CursoDAO();
-        for (Curso c : cursoDAO.getLista()) {
-            cbCurso.addItem(c.getNome()); // <-- aqui está a mudança!
-        }
-        atualizarTabela();
-
-
-    }//GEN-LAST:event_formWindowOpened
-
-    private void chkAtivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAtivoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chkAtivoActionPerformed
-
     private void bntSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSalvarActionPerformed
         // TODO add your handling code here:
         try {
+            // 1. Pegue os dados dos campos
             String nome = txtNome.getText().trim();
             String cpf = txtCpf.getText().trim();
             String email = txtEmail.getText().trim();
             String dataNascStr = txtDataNascimento.getText().trim();
             boolean ativo = chkAtivo.isSelected();
 
+            // 2. Obtenha o curso selecionado
             int indiceSelecionado = cbCurso.getSelectedIndex();
             if (indiceSelecionado == -1) {
                 JOptionPane.showMessageDialog(this, "Selecione um curso!");
@@ -200,15 +220,17 @@ public class JanelaAluno extends javax.swing.JFrame {
             }
             Curso cursoSelecionado = listaCursos.get(indiceSelecionado);
 
+            // 3. Validação simples
             if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || dataNascStr.isEmpty() || cursoSelecionado == null) {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
                 return;
             }
 
-            // Aqui o importante: o formato deve ser o mesmo usado ao editar!
+            // 4. Converter data
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
 
+            // 5. Montar objeto Aluno
             Aluno aluno = new Aluno();
             aluno.setNome(nome);
             aluno.setCpf(cpf);
@@ -218,67 +240,47 @@ public class JanelaAluno extends javax.swing.JFrame {
             aluno.setCurso(cursoSelecionado);
 
             AlunoDAO alunoDAO = new AlunoDAO();
-            alunoDAO.adiciona(aluno);
 
-            JOptionPane.showMessageDialog(this, "Aluno cadastrado com sucesso!");
+            if (idAlunoEditando == null) {
+                // Cadastro novo
+                alunoDAO.adiciona(aluno);
+                JOptionPane.showMessageDialog(this, "Aluno cadastrado com sucesso!");
+            } else {
+                // Edição
+                aluno.setId(idAlunoEditando);
+                alunoDAO.altera(aluno); // Você precisa criar esse método no AlunoDAO!
+                JOptionPane.showMessageDialog(this, "Aluno alterado com sucesso!");
+                idAlunoEditando = null; // Reseta para novo cadastro
+            }
+
             limparCampos();
             atualizarTabela();
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar aluno: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage());
         }
     }//GEN-LAST:event_bntSalvarActionPerformed
 
-    private void bntExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExcluirActionPerformed
-        // TODO add your handling code here:
-        int linhaSelecionada = tblAlunos.getSelectedRow();
-        if (linhaSelecionada != -1) {
-            // Supondo que o ID está na primeira coluna da tabela
-            int idAluno = (int) tblAlunos.getValueAt(linhaSelecionada, 0);
-
-            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o aluno selecionado?", "Confirmação", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    AlunoDAO alunoDAO = new AlunoDAO();
-                    Aluno aluno = alunoDAO.buscaPorId(idAluno);
-                    if (aluno != null) {
-                        alunoDAO.remove(aluno);
-                        JOptionPane.showMessageDialog(this, "Aluno excluído com sucesso!");
-                        atualizarTabela(); // Atualize a tabela para refletir a exclusão
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Aluno não encontrado no banco de dados.");
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Erro ao excluir aluno: " + ex.getMessage());
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.");
-        }
-    }//GEN-LAST:event_bntExcluirActionPerformed
-
-    private void bntLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntLimparActionPerformed
-        // TODO add your handling code here:
-        limparCampos();
-
-    }//GEN-LAST:event_bntLimparActionPerformed
-
     private void bntEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntEditarActionPerformed
         // TODO add your handling code here:
+        // Verifica se alguma linha está selecionada
         int linhaSelecionada = tblAlunos.getSelectedRow();
         if (linhaSelecionada != -1) {
+            // Pega o ID do aluno na primeira coluna da linha selecionada
             int idAluno = (int) tblAlunos.getValueAt(linhaSelecionada, 0);
 
+            // Busca o aluno no banco
             AlunoDAO alunoDAO = new AlunoDAO();
             Aluno aluno = alunoDAO.buscaPorId(idAluno);
 
             if (aluno != null) {
-                // Preenche os campos com os dados do aluno
+                // Preenche os campos do formulário
                 txtNome.setText(aluno.getNome());
                 txtCpf.setText(aluno.getCpf());
                 txtEmail.setText(aluno.getEmail());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                // Formata a data para o campo
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 txtDataNascimento.setText(aluno.getDataNascimento().format(formatter));
                 chkAtivo.setSelected(aluno.isAtivo());
 
@@ -289,48 +291,51 @@ public class JanelaAluno extends javax.swing.JFrame {
                         break;
                     }
                 }
+
+                // Marca que está editando este aluno
+                idAlunoEditando = aluno.getId();
             } else {
                 JOptionPane.showMessageDialog(this, "Aluno não encontrado.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Selecione um aluno para editar.");
+            JOptionPane.showMessageDialog(this, "Selecione um aluno na tabela para editar.");
         }
     }//GEN-LAST:event_bntEditarActionPerformed
 
-    private void limparCampos() {
-        txtNome.setText("");
-        txtCpf.setText("");
-        txtEmail.setText("");
-        txtDataNascimento.setText("");
-        chkAtivo.setSelected(false); // ou true, se quiser deixar ativo por padrão
-        cbCurso.setSelectedIndex(0); // seleciona o primeiro curso do comboBox, se for o caso
-    }
+    private void bntExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExcluirActionPerformed
+        // TODO add your handling code here:
+        // Verifica se alguma linha está selecionada na tabela
+        int linhaSelecionada = tblAlunos.getSelectedRow();
+        if (linhaSelecionada != -1) {
+            // Pega o ID do aluno na primeira coluna da linha selecionada
+            int idAluno = (int) tblAlunos.getValueAt(linhaSelecionada, 0);
 
-    private void atualizarTabela() {
-        DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
-        model.setRowCount(0);
-        AlunoDAO alunoDAO = new AlunoDAO();
-        for (Aluno a : alunoDAO.getLista()) {
-            String nomeCurso = (a.getCurso() != null && a.getCurso().getId() > 0) ? buscarNomeCurso(a.getCurso().getId()) : "";
-            model.addRow(new Object[]{
-                a.getId(), a.getNome(), a.getCpf(), a.getEmail(), a.getDataNascimento(), nomeCurso, a.isAtivo() ? "Sim" : "Não"
-            });
+            // Busca o aluno no banco
+            AlunoDAO alunoDAO = new AlunoDAO();
+            Aluno aluno = alunoDAO.buscaPorId(idAluno);
+
+            if (aluno != null) {
+                // Pede confirmação ao usuário
+                int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este aluno?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    alunoDAO.remove(aluno); // Remove do banco
+                    JOptionPane.showMessageDialog(this, "Aluno excluído com sucesso!");
+                    atualizarTabela();      // Atualiza a tabela
+                    limparCampos();         // Limpa o formulário
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Aluno não encontrado.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um aluno na tabela para excluir.");
         }
-    }
 
-    private String buscarNomeCurso(int idCurso) {
-        CursoDAO cursoDAO = new CursoDAO();
-        Curso curso = cursoDAO.buscaPorId(idCurso);
-        return curso != null ? curso.getNome() : "";
-    }
+    }//GEN-LAST:event_bntExcluirActionPerformed
 
-    private void preencherComboCursos() {
-        cbCurso.removeAllItems();
-        listaCursos = new CursoDAO().getLista();
-        for (Curso c : listaCursos) {
-            cbCurso.addItem(c.getNome()); // Adiciona só o nome do curso!
-        }
-    }
+    private void bntLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntLimparActionPerformed
+        // TODO add your handling code here:
+        limparCampos();
+    }//GEN-LAST:event_bntLimparActionPerformed
 
     /**
      * @param args the command line arguments
@@ -368,19 +373,20 @@ public class JanelaAluno extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel C;
-    private javax.swing.JLabel E;
-    private javax.swing.JLabel N;
     private javax.swing.JButton bntEditar;
     private javax.swing.JButton bntExcluir;
     private javax.swing.JButton bntLimpar;
     private javax.swing.JButton bntSalvar;
     private javax.swing.JComboBox<String> cbCurso;
     private javax.swing.JCheckBox chkAtivo;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable tblAlunos;
     private javax.swing.JTextField txtCpf;
     private javax.swing.JTextField txtDataNascimento;

@@ -9,10 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlunoDAO {
+
     private Connection conn;
 
     public AlunoDAO() {
         conn = new ConnectionFactory().getConnection();
+    }
+
+    public void altera(Aluno aluno) {
+        String sql = "UPDATE aluno SET nome=?, cpf=?, email=?, data_nascimento=?, ativo=?, id_curso=? WHERE id=?";
+        try (
+                Connection con = new ConnectionFactory().getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, aluno.getNome());
+            stmt.setString(2, aluno.getCpf());
+            stmt.setString(3, aluno.getEmail());
+            stmt.setDate(4, java.sql.Date.valueOf(aluno.getDataNascimento()));
+            stmt.setBoolean(5, aluno.isAtivo());
+            stmt.setInt(6, aluno.getCurso().getId());
+            stmt.setInt(7, aluno.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao alterar aluno", e);
+        }
     }
 
     // Adiciona novo aluno
@@ -31,23 +49,6 @@ public class AlunoDAO {
         }
     }
 
-    // Altera um aluno existente
-    public void altera(Aluno aluno) {
-        String sql = "UPDATE aluno SET nome=?, cpf=?, email=?, data_nascimento=?, id_curso=?, ativo=? WHERE id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, aluno.getNome());
-            stmt.setString(2, aluno.getCpf());
-            stmt.setString(3, aluno.getEmail());
-            stmt.setDate(4, Date.valueOf(aluno.getDataNascimento()));
-            stmt.setInt(5, aluno.getCurso().getId());
-            stmt.setBoolean(6, aluno.isAtivo());
-            stmt.setInt(7, aluno.getId());
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Erro ao alterar aluno", ex);
-        }
-    }
-
     // Remove um aluno
     public void remove(Aluno aluno) {
         String sql = "DELETE FROM aluno WHERE id=?";
@@ -62,9 +63,9 @@ public class AlunoDAO {
     // Lista todos os alunos
     public List<Aluno> getLista() {
         List<Aluno> lista = new ArrayList<>();
-        String sql = "SELECT * FROM aluno ORDER BY nome";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        // Faz JOIN para pegar o nome do curso associado
+        String sql = "SELECT a.*, c.nome AS nomeCurso FROM aluno a LEFT JOIN curso c ON a.id_curso = c.id ORDER BY a.nome";
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Aluno a = new Aluno();
                 a.setId(rs.getInt("id"));
@@ -73,12 +74,13 @@ public class AlunoDAO {
                 a.setEmail(rs.getString("email"));
                 a.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                 a.setAtivo(rs.getBoolean("ativo"));
-                
-                // Carrega o curso associado (apenas ID)
+
+                // Carrega o curso associado com id e nome
                 Curso c = new Curso();
                 c.setId(rs.getInt("id_curso"));
+                c.setNome(rs.getString("nomeCurso")); // <-- agora o nome do curso será exibido!
                 a.setCurso(c);
-                
+
                 lista.add(a);
             }
         } catch (SQLException ex) {
@@ -101,11 +103,11 @@ public class AlunoDAO {
                     a.setEmail(rs.getString("email"));
                     a.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                     a.setAtivo(rs.getBoolean("ativo"));
-                    
+
                     Curso c = new Curso();
                     c.setId(rs.getInt("id_curso"));
                     a.setCurso(c);
-                    
+
                     return a;
                 }
             }
@@ -130,11 +132,11 @@ public class AlunoDAO {
                     a.setEmail(rs.getString("email"));
                     a.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                     a.setAtivo(rs.getBoolean("ativo"));
-                    
+
                     Curso c = new Curso();
                     c.setId(rs.getInt("id_curso"));
                     a.setCurso(c);
-                    
+
                     lista.add(a);
                 }
             }
@@ -181,4 +183,5 @@ public class AlunoDAO {
             throw new RuntimeException("Erro ao reativar aluno", ex);
         }
     }
+
 }
