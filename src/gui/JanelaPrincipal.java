@@ -40,7 +40,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Janela Principal");
         jLabel1.setToolTipText("");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 0, 151, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 151, -1));
 
         bntJanelaCurso.setText("gerenciar curso");
         bntJanelaCurso.addActionListener(new java.awt.event.ActionListener() {
@@ -48,7 +48,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 bntJanelaCursoActionPerformed(evt);
             }
         });
-        getContentPane().add(bntJanelaCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
+        getContentPane().add(bntJanelaCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, -1, -1));
 
         bntJanelaAluno.setText("gerenciar aluno");
         bntJanelaAluno.setToolTipText("");
@@ -57,7 +57,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 bntJanelaAlunoActionPerformed(evt);
             }
         });
-        getContentPane().add(bntJanelaAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, -1, -1));
+        getContentPane().add(bntJanelaAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

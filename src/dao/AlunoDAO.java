@@ -184,4 +184,30 @@ public class AlunoDAO {
         }
     }
 
+    public List<Aluno> buscarPorNome(String nomeBusca) {
+        List<Aluno> lista = new ArrayList<>();
+        String sql = "SELECT a.*, c.nome AS nomeCurso FROM aluno a LEFT JOIN curso c ON a.id_curso = c.id WHERE a.nome LIKE ? ORDER BY a.nome";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nomeBusca + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Aluno a = new Aluno();
+                a.setId(rs.getInt("id"));
+                a.setNome(rs.getString("nome"));
+                a.setCpf(rs.getString("cpf"));
+                a.setEmail(rs.getString("email"));
+                a.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                a.setAtivo(rs.getBoolean("ativo"));
+                Curso c = new Curso();
+                c.setId(rs.getInt("id_curso"));
+                c.setNome(rs.getString("nomeCurso"));
+                a.setCurso(c);
+                lista.add(a);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro ao buscar alunos por nome", ex);
+        }
+        return lista;
+    }
+
 }

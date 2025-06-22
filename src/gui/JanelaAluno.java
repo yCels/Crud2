@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Aluno;
 import modelo.Curso;
 import dao.CursoDAO;
+import java.util.List;
 
 /**
  *
@@ -54,35 +55,51 @@ public class JanelaAluno extends javax.swing.JFrame {
     }
 
     private void atualizarTabela() {
-         // Garante que está usando o modelo correto
-    DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
-    model.setRowCount(0); // Limpa todas as linhas
+        // Garante que está usando o modelo correto
+        DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
+        model.setRowCount(0); // Limpa todas as linhas
 
-    AlunoDAO alunoDAO = new AlunoDAO();
-    for (Aluno a : alunoDAO.getLista()) {
-        // Pega o nome do curso do objeto Curso já preenchido
-        String nomeCurso = "";
-        if (a.getCurso() != null && a.getCurso().getNome() != null) {
-            nomeCurso = a.getCurso().getNome();
-        }
-        // Formata data
-        String dataNasc = "";
-        if (a.getDataNascimento() != null) {
-            dataNasc = a.getDataNascimento().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        AlunoDAO alunoDAO = new AlunoDAO();
+        for (Aluno a : alunoDAO.getLista()) {
+            // Pega o nome do curso do objeto Curso já preenchido
+            String nomeCurso = "";
+            if (a.getCurso() != null && a.getCurso().getNome() != null) {
+                nomeCurso = a.getCurso().getNome();
+            }
+            // Formata data
+            String dataNasc = "";
+            if (a.getDataNascimento() != null) {
+                dataNasc = a.getDataNascimento().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+
+            // Adiciona linha na tabela
+            model.addRow(new Object[]{
+                a.getId(),
+                a.getNome(),
+                a.getCpf(),
+                a.getEmail(),
+                dataNasc,
+                nomeCurso,
+                a.isAtivo() ? "Sim" : "Não"
+            });
         }
 
-        // Adiciona linha na tabela
-        model.addRow(new Object[]{
-            a.getId(),
-            a.getNome(),
-            a.getCpf(),
-            a.getEmail(),
-            dataNasc,
-            nomeCurso,
-            a.isAtivo() ? "Sim" : "Não"
-        });
     }
-        
+
+    private void atualizarTabelaComLista(List<Aluno> lista) {
+        DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
+        model.setRowCount(0);
+        for (Aluno a : lista) {
+            model.addRow(new Object[]{
+                a.getId(),
+                a.getNome(),
+                a.getCpf(),
+                a.getEmail(),
+                a.getDataNascimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                a.getCurso().getNome(),
+                a.isAtivo() ? "Sim" : "Não"
+            });
+        }
     }
 
     /**
@@ -103,8 +120,8 @@ public class JanelaAluno extends javax.swing.JFrame {
         bntExcluir = new javax.swing.JButton();
         bntEditar = new javax.swing.JButton();
         bntLimpar = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        bntReativar = new javax.swing.JButton();
+        bntInativar = new javax.swing.JButton();
         chkAtivo = new javax.swing.JCheckBox();
         cbCurso = new javax.swing.JComboBox<>();
         txtNome = new javax.swing.JTextField();
@@ -113,6 +130,9 @@ public class JanelaAluno extends javax.swing.JFrame {
         txtDataNascimento = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAlunos = new javax.swing.JTable();
+        txtConsultaAluno = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        bntConsultarAluno = new javax.swing.JButton();
 
         jButton6.setText("jButton6");
 
@@ -163,11 +183,21 @@ public class JanelaAluno extends javax.swing.JFrame {
         });
         getContentPane().add(bntLimpar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
 
-        jButton5.setText("jButton5");
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, -1, -1));
+        bntReativar.setText("Reativar");
+        bntReativar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntReativarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, -1, -1));
 
-        jButton7.setText("jButton7");
-        getContentPane().add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, -1, -1));
+        bntInativar.setText("Inativar");
+        bntInativar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntInativarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, -1, -1));
 
         chkAtivo.setText("jCheckBox1");
         getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
@@ -198,6 +228,25 @@ public class JanelaAluno extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblAlunos);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 280, 180));
+
+        txtConsultaAluno.setText("NomeAluno");
+        txtConsultaAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtConsultaAlunoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtConsultaAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 210, -1, -1));
+
+        jLabel5.setText("Busca");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, -1, -1));
+
+        bntConsultarAluno.setText("buscar");
+        bntConsultarAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntConsultarAlunoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntConsultarAluno, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -337,6 +386,68 @@ public class JanelaAluno extends javax.swing.JFrame {
         limparCampos();
     }//GEN-LAST:event_bntLimparActionPerformed
 
+    private void bntInativarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntInativarActionPerformed
+        // TODO add your handling code here:
+        int linhaSelecionada = tblAlunos.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um aluno para inativar.");
+            return;
+        }
+        int idAluno = (int) tblAlunos.getValueAt(linhaSelecionada, 0);
+
+        AlunoDAO alunoDAO = new AlunoDAO();
+        Aluno aluno = alunoDAO.buscaPorId(idAluno);
+        if (aluno != null) {
+            aluno.setAtivo(false);
+            alunoDAO.altera(aluno);
+            JOptionPane.showMessageDialog(this, "Aluno inativado com sucesso!");
+            atualizarTabela();
+        } else {
+            JOptionPane.showMessageDialog(this, "Aluno não encontrado.");
+        }
+
+    }//GEN-LAST:event_bntInativarActionPerformed
+
+    private void bntReativarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntReativarActionPerformed
+        // TODO add your handling code here
+        int linhaSelecionada = tblAlunos.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um aluno para reativar.");
+            return;
+        }
+        int idAluno = (int) tblAlunos.getValueAt(linhaSelecionada, 0);
+
+        AlunoDAO alunoDAO = new AlunoDAO();
+        Aluno aluno = alunoDAO.buscaPorId(idAluno);
+        if (aluno != null) {
+            aluno.setAtivo(true);
+            alunoDAO.altera(aluno);
+            JOptionPane.showMessageDialog(this, "Aluno reativado com sucesso!");
+            atualizarTabela();
+        } else {
+            JOptionPane.showMessageDialog(this, "Aluno não encontrado.");
+        }
+    }//GEN-LAST:event_bntReativarActionPerformed
+
+    private void txtConsultaAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConsultaAlunoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtConsultaAlunoActionPerformed
+
+    private void bntConsultarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntConsultarAlunoActionPerformed
+        // TODO add your handling code here:
+        String termo = txtConsultaAluno.getText().trim();
+        if (termo.isEmpty()) {
+            // Se o campo estiver vazio, atualiza a tabela normalmente
+            atualizarTabela();
+            return;
+        }
+
+        AlunoDAO alunoDAO = new AlunoDAO();
+        List<Aluno> lista = alunoDAO.buscarPorNome(termo); // Você deve criar este método!
+        atualizarTabelaComLista(lista);
+
+    }//GEN-LAST:event_bntConsultarAlunoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -373,21 +484,24 @@ public class JanelaAluno extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bntConsultarAluno;
     private javax.swing.JButton bntEditar;
     private javax.swing.JButton bntExcluir;
+    private javax.swing.JButton bntInativar;
     private javax.swing.JButton bntLimpar;
+    private javax.swing.JButton bntReativar;
     private javax.swing.JButton bntSalvar;
     private javax.swing.JComboBox<String> cbCurso;
     private javax.swing.JCheckBox chkAtivo;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblAlunos;
+    private javax.swing.JTextField txtConsultaAluno;
     private javax.swing.JTextField txtCpf;
     private javax.swing.JTextField txtDataNascimento;
     private javax.swing.JTextField txtEmail;

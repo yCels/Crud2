@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CursoDAO {
+
     private Connection conn;
 
     public CursoDAO() {
@@ -57,8 +58,7 @@ public class CursoDAO {
     public List<Curso> getLista() {
         List<Curso> lista = new ArrayList<>();
         String sql = "SELECT * FROM curso ORDER BY nome";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Curso c = new Curso();
                 c.setId(rs.getInt("id"));
@@ -149,7 +149,25 @@ public class CursoDAO {
         }
         return 0;
     }
+
+    public List<Curso> buscarPorNome(String nomeBusca) {
+        List<Curso> lista = new ArrayList<>();
+        String sql = "SELECT * FROM curso WHERE nome LIKE ? ORDER BY nome";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nomeBusca + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Curso c = new Curso();
+                c.setId(rs.getInt("id"));
+                c.setNome(rs.getString("nome"));
+                c.setCargaHoraria(rs.getInt("carga_horaria"));
+                c.setLimiteAlunos(rs.getInt("limite_alunos"));
+                c.setAtivo(rs.getBoolean("ativo"));
+                lista.add(c);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro ao buscar cursos por nome", ex);
+        }
+        return lista;
+    }
 }
-  
-
-

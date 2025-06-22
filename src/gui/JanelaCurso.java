@@ -58,6 +58,20 @@ public class JanelaCurso extends javax.swing.JFrame {
         tblCursos.clearSelection();
     }
 
+    private void atualizarTabelaComLista(List<Curso> lista) {
+        DefaultTableModel model = (DefaultTableModel) tblCursos.getModel();
+        model.setRowCount(0);
+        for (Curso c : lista) {
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getCargaHoraria(),
+                c.getLimiteAlunos(),
+                c.isAtivo() ? "Sim" : "Não"
+            });
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -67,6 +81,8 @@ public class JanelaCurso extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         txtNomeCurso = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -82,6 +98,13 @@ public class JanelaCurso extends javax.swing.JFrame {
         bntSalvar = new javax.swing.JButton();
         bntInativar = new javax.swing.JButton();
         bntReativar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtConsultaCurso = new javax.swing.JTextField();
+        bntConsultarCurso = new javax.swing.JButton();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -176,6 +199,25 @@ public class JanelaCurso extends javax.swing.JFrame {
             }
         });
         getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, -1));
+
+        jLabel4.setText("buscar");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, -1, -1));
+
+        txtConsultaCurso.setText("jTextField1");
+        txtConsultaCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtConsultaCursoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtConsultaCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, -1, -1));
+
+        bntConsultarCurso.setText("buscar");
+        bntConsultarCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntConsultarCursoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntConsultarCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 290, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -318,6 +360,24 @@ public class JanelaCurso extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Curso reativado.");
     }//GEN-LAST:event_bntReativarActionPerformed
 
+    private void txtConsultaCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConsultaCursoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtConsultaCursoActionPerformed
+
+    private void bntConsultarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntConsultarCursoActionPerformed
+        // TODO add your handling code here:
+        String termo = txtConsultaCurso.getText().trim();
+        if (termo.isEmpty()) {
+            atualizarTabela();
+            return;
+        }
+
+        CursoDAO cursoDAO = new CursoDAO();
+        List<Curso> lista = cursoDAO.buscarPorNome(termo); // Você vai criar este método no DAO!
+        atualizarTabelaComLista(lista);
+
+    }//GEN-LAST:event_bntConsultarCursoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -354,6 +414,7 @@ public class JanelaCurso extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bntConsultarCurso;
     private javax.swing.JButton bntEditar;
     private javax.swing.JButton bntExcluir;
     private javax.swing.JButton bntInativar;
@@ -364,9 +425,13 @@ public class JanelaCurso extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTable tblCursos;
     private javax.swing.JTextField txtCargaHoraria;
+    private javax.swing.JTextField txtConsultaCurso;
     private javax.swing.JTextField txtLimiteAlunos;
     private javax.swing.JTextField txtNomeCurso;
     // End of variables declaration//GEN-END:variables
