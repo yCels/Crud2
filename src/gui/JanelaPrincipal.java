@@ -5,6 +5,8 @@
 package gui;
 
 import javax.swing.JOptionPane;
+import gui.JanelaAluno;
+import gui.JanelaCurso;
 
 /**
  *
@@ -12,14 +14,16 @@ import javax.swing.JOptionPane;
  */
 public class JanelaPrincipal extends javax.swing.JFrame {
 
+    private JanelaAluno janelaAluno;
+    private JanelaCurso janelaCurso;
+
     /**
      * Creates new form JanelaPrincipal
      */
     public JanelaPrincipal() {
         initComponents();
+
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,12 +68,25 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void bntJanelaCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaCursoActionPerformed
         // TODO add your handling code here:
-        new JanelaCurso().setVisible(true);
+        if (janelaAluno == null || !janelaAluno.isDisplayable()) {
+            janelaAluno = new JanelaAluno();
+        }
+        // Cria a janela de curso passando a janelaAluno como parâmetro
+        if (janelaCurso == null || !janelaCurso.isDisplayable()) {
+            janelaCurso = new JanelaCurso(janelaAluno);
+        }
+        janelaCurso.setVisible(true);
+
+
     }//GEN-LAST:event_bntJanelaCursoActionPerformed
 
     private void bntJanelaAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntJanelaAlunoActionPerformed
         // TODO add your handling code here:
-        new JanelaAluno().setVisible(true);
+        if (janelaAluno == null || !janelaAluno.isDisplayable()) {
+            janelaAluno = new JanelaAluno();
+        }
+        janelaAluno.setVisible(true);
+
     }//GEN-LAST:event_bntJanelaAlunoActionPerformed
 
     /**
@@ -105,10 +122,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 new JanelaPrincipal().setVisible(true);
             }
         });
-        
+
     }
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntJanelaAluno;

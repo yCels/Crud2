@@ -14,11 +14,13 @@ public class JanelaCurso extends javax.swing.JFrame {
 
     private CursoDAO cursoDAO = new CursoDAO();
     private Curso cursoSelecionado = null;
+    private JanelaAluno janelaAluno;
 
     /**
      * Creates new form JanelaCurso
      */
-    public JanelaCurso() {
+    public JanelaCurso(JanelaAluno janelaAluno) {
+        this.janelaAluno = janelaAluno; // Salva a referência da janela de alunos
         initComponents();
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
@@ -326,6 +328,10 @@ public class JanelaCurso extends javax.swing.JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 dao.remove(c);
                 atualizarTabela();
+                // Atualiza também os alunos
+                if (janelaAluno != null) {
+                    janelaAluno.atualizarTabela();
+                }
                 limparCampos();
                 JOptionPane.showMessageDialog(this, "Curso excluído.");
             }
@@ -406,9 +412,31 @@ public class JanelaCurso extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JanelaCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JanelaCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JanelaCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JanelaCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the forms */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JanelaCurso().setVisible(true);
+                JanelaAluno janelaAluno = new JanelaAluno();
+                JanelaCurso janelaCurso = new JanelaCurso(janelaAluno);
+                janelaAluno.setVisible(true);
+                janelaCurso.setVisible(true);
             }
         });
     }

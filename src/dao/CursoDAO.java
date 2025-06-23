@@ -45,12 +45,22 @@ public class CursoDAO {
 
     // Remove um curso
     public void remove(Curso curso) {
-        String sql = "DELETE FROM curso WHERE id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, curso.getId());
-            stmt.executeUpdate();
+        try {
+            // 1. Exclui todos os alunos que pertencem a este curso
+            String sqlAlunos = "DELETE FROM aluno WHERE id_curso = ?";
+            try (PreparedStatement stmtAlunos = conn.prepareStatement(sqlAlunos)) {
+                stmtAlunos.setInt(1, curso.getId());
+                stmtAlunos.executeUpdate();
+            }
+
+            // 2. Exclui o curso (depois de excluir os alunos)
+            String sqlCurso = "DELETE FROM curso WHERE id = ?";
+            try (PreparedStatement stmtCurso = conn.prepareStatement(sqlCurso)) {
+                stmtCurso.setInt(1, curso.getId());
+                stmtCurso.executeUpdate();
+            }
         } catch (SQLException ex) {
-            throw new RuntimeException("Erro ao remover curso", ex);
+            throw new RuntimeException("Erro ao remover curso e seus alunos", ex);
         }
     }
 

@@ -54,7 +54,7 @@ public class JanelaAluno extends javax.swing.JFrame {
         tblAlunos.clearSelection(); // desmarca qualquer seleção na tabela
     }
 
-    private void atualizarTabela() {
+    public void atualizarTabela() {
         // Garante que está usando o modelo correto
         DefaultTableModel model = (DefaultTableModel) tblAlunos.getModel();
         model.setRowCount(0); // Limpa todas as linhas
