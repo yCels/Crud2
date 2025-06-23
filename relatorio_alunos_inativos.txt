@@ -1,0 +1,6 @@
+Curso: historia
+  - nina (CPF: 45789107842)
+
+Curso: portugues
+  - celsa (CPF: 38717496849)
+

@@ -1,11 +1,14 @@
 package gui;
 
+import dao.AlunoDAO;
 import javax.swing.JOptionPane;
 import modelo.Curso;
 import dao.CursoDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 import java.util.ArrayList;
+import modelo.Aluno;
 
 /**
  *
@@ -36,11 +39,80 @@ public class JanelaCurso extends javax.swing.JFrame {
         };
         tblCursos.setModel(model);
         atualizarTabela();
+        carregarCursosNoComboBox();
+
+        bntverAlunos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntverAlunosActionPerformed(evt);
+            }
+        });
+    }
+
+    private void exportarAlunosInativosPorCurso() {
+        CursoDAO cursoDAO = new CursoDAO();
+        AlunoDAO alunoDAO = new AlunoDAO();
+        List<Curso> cursos = cursoDAO.getLista();
+
+        StringBuilder relatorio = new StringBuilder();
+        for (Curso curso : cursos) {
+            relatorio.append("Curso: ").append(curso.getNome()).append("\n");
+            List<Aluno> alunos = alunoDAO.getLista();
+            boolean temInativo = false;
+            for (Aluno aluno : alunos) {
+                if (aluno.getCurso() != null && aluno.getCurso().getId() == curso.getId() && !aluno.isAtivo()) {
+                    relatorio.append("  - ").append(aluno.getNome()).append(" (CPF: ").append(aluno.getCpf()).append(")\n");
+                    temInativo = true;
+                }
+            }
+            if (!temInativo) {
+                relatorio.append("  Nenhum aluno inativo neste curso.\n");
+            }
+            relatorio.append("\n");
+        }
+
+        // Salvar em arquivo
+        try (java.io.FileWriter fw = new java.io.FileWriter("relatorio_alunos_inativos.txt")) {
+            fw.write(relatorio.toString());
+            javax.swing.JOptionPane.showMessageDialog(this, "Relatório de alunos inativos exportado com sucesso!");
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao exportar: " + ex.getMessage());
+        }
+    }
+
+    private void exportarAlunosAtivosPorCurso() {
+        CursoDAO cursoDAO = new CursoDAO();
+        AlunoDAO alunoDAO = new AlunoDAO();
+        List<Curso> cursos = cursoDAO.getLista();
+
+        StringBuilder relatorio = new StringBuilder();
+        for (Curso curso : cursos) {
+            relatorio.append("Curso: ").append(curso.getNome()).append("\n");
+            List<Aluno> alunos = alunoDAO.getLista(); // Busca todos alunos
+            boolean temAtivo = false;
+            for (Aluno aluno : alunos) {
+                if (aluno.getCurso() != null && aluno.getCurso().getId() == curso.getId() && aluno.isAtivo()) {
+                    relatorio.append("  - ").append(aluno.getNome()).append(" (CPF: ").append(aluno.getCpf()).append(")\n");
+                    temAtivo = true;
+                }
+            }
+            if (!temAtivo) {
+                relatorio.append("  Nenhum aluno ativo neste curso.\n");
+            }
+            relatorio.append("\n");
+        }
+
+        // Salvar em arquivo
+        try (java.io.FileWriter fw = new java.io.FileWriter("relatorio_alunos_ativos.txt")) {
+            fw.write(relatorio.toString());
+            javax.swing.JOptionPane.showMessageDialog(this, "Relatório de alunos ativos exportado com sucesso!");
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao exportar: " + ex.getMessage());
+        }
     }
 
     private void carregarCursosNoComboBox() {
         cbCursoSelecionar.removeAllItems();
-        listaCursos = cursoDAO.listarTodos(); // Atualiza a lista de cursos da classe
+        listaCursos = cursoDAO.getLista(); // Usa o método já existente no seu DAO
         for (Curso curso : listaCursos) {
             cbCursoSelecionar.addItem(curso.getNome());
         }
@@ -116,6 +188,8 @@ public class JanelaCurso extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         cbCursoSelecionar = new javax.swing.JComboBox<>();
         bntverAlunos = new javax.swing.JButton();
+        bntExportarAtivo = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -165,7 +239,7 @@ public class JanelaCurso extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblCursos);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 400, 130));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 400, 130));
 
         bntNovo.setText("Novo");
         bntNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -181,7 +255,7 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntExcluirActionPerformed(evt);
             }
         });
-        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 240, -1, -1));
+        getContentPane().add(bntExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 240, -1, -1));
 
         bntEditar.setText("Editar");
         bntEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -189,7 +263,7 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
+        getContentPane().add(bntEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 240, -1, -1));
 
         bntSalvar.setText("Salvar");
         bntSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -197,7 +271,7 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, -1, -1));
+        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, -1, -1));
 
         bntInativar.setText("Inativar");
         bntInativar.addActionListener(new java.awt.event.ActionListener() {
@@ -205,7 +279,7 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntInativarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 240, -1, -1));
+        getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 240, -1, -1));
 
         bntReativar.setText("Reativar");
         bntReativar.addActionListener(new java.awt.event.ActionListener() {
@@ -213,7 +287,7 @@ public class JanelaCurso extends javax.swing.JFrame {
                 bntReativarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, -1));
+        getContentPane().add(bntReativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, -1, -1));
 
         jLabel4.setText("buscar");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, -1, -1));
@@ -235,18 +309,34 @@ public class JanelaCurso extends javax.swing.JFrame {
         getContentPane().add(bntConsultarCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 290, -1, -1));
 
         jLabel5.setText("ver curso");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 280, 50, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 310, 50, -1));
 
         cbCursoSelecionar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(cbCursoSelecionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 280, -1, -1));
+        getContentPane().add(cbCursoSelecionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 310, -1, -1));
 
-        bntverAlunos.setText("jButton1");
+        bntverAlunos.setText("ver");
         bntverAlunos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bntverAlunosActionPerformed(evt);
             }
         });
-        getContentPane().add(bntverAlunos, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 310, -1, -1));
+        getContentPane().add(bntverAlunos, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 310, -1, -1));
+
+        bntExportarAtivo.setText("Alunos ativos");
+        bntExportarAtivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntExportarAtivoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntExportarAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 380, -1, -1));
+
+        jButton1.setText("Alunos Inativos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 110, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -413,7 +503,37 @@ public class JanelaCurso extends javax.swing.JFrame {
 
     private void bntverAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntverAlunosActionPerformed
         // TODO add your handling code here:
+        int indice = cbCursoSelecionar.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um curso!");
+            return;
+        }
+        Curso cursoSelecionado = listaCursos.get(indice);
+
+        dao.AlunoDAO alunoDAO = new dao.AlunoDAO();
+        List<modelo.Aluno> alunos = alunoDAO.getLista(); // Busca todos alunos
+
+        StringBuilder sb = new StringBuilder();
+        for (modelo.Aluno aluno : alunos) {
+            if (aluno.getCurso() != null && aluno.getCurso().getId() == cursoSelecionado.getId()) {
+                sb.append(aluno.getNome()).append(" - CPF: ").append(aluno.getCpf()).append("\n");
+            }
+        }
+        if (sb.length() == 0) {
+            sb.append("Nenhum aluno cadastrado neste curso.");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(), "Alunos do Curso: " + cursoSelecionado.getNome(), JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_bntverAlunosActionPerformed
+
+    private void bntExportarAtivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExportarAtivoActionPerformed
+        // TODO add your handling code here:
+        exportarAlunosAtivosPorCurso();
+    }//GEN-LAST:event_bntExportarAtivoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        exportarAlunosInativosPorCurso();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -476,6 +596,7 @@ public class JanelaCurso extends javax.swing.JFrame {
     private javax.swing.JButton bntConsultarCurso;
     private javax.swing.JButton bntEditar;
     private javax.swing.JButton bntExcluir;
+    private javax.swing.JButton bntExportarAtivo;
     private javax.swing.JButton bntInativar;
     private javax.swing.JButton bntNovo;
     private javax.swing.JButton bntReativar;
@@ -483,6 +604,7 @@ public class JanelaCurso extends javax.swing.JFrame {
     private javax.swing.JButton bntverAlunos;
     private javax.swing.JComboBox<String> cbCursoSelecionar;
     private javax.swing.JCheckBox chkAtivo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
