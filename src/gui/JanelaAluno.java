@@ -157,7 +157,7 @@ public class JanelaAluno extends javax.swing.JFrame {
                 bntSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
+        getContentPane().add(bntSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, -1, -1));
 
         bntExcluir.setText("Excluir");
         bntExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -199,7 +199,7 @@ public class JanelaAluno extends javax.swing.JFrame {
         });
         getContentPane().add(bntInativar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, -1, -1));
 
-        chkAtivo.setText("jCheckBox1");
+        chkAtivo.setText("ativo");
         getContentPane().add(chkAtivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
 
         cbCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -268,6 +268,12 @@ public class JanelaAluno extends javax.swing.JFrame {
                 return;
             }
             Curso cursoSelecionado = listaCursos.get(indiceSelecionado);
+
+            // *** NOVO: Verifica se o curso está inativo ***
+            if (!cursoSelecionado.isAtivo()) {
+                JOptionPane.showMessageDialog(this, "Não é possível cadastrar alunos em cursos inativos!");
+                return;
+            }
 
             // 3. Validação simples
             if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || dataNascStr.isEmpty() || cursoSelecionado == null) {
