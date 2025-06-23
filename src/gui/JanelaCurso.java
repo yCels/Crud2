@@ -5,6 +5,7 @@ import modelo.Curso;
 import dao.CursoDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,6 +16,7 @@ public class JanelaCurso extends javax.swing.JFrame {
     private CursoDAO cursoDAO = new CursoDAO();
     private Curso cursoSelecionado = null;
     private JanelaAluno janelaAluno;
+    private List<Curso> listaCursos = new ArrayList<>();
 
     /**
      * Creates new form JanelaCurso
@@ -34,6 +36,14 @@ public class JanelaCurso extends javax.swing.JFrame {
         };
         tblCursos.setModel(model);
         atualizarTabela();
+    }
+
+    private void carregarCursosNoComboBox() {
+        cbCursoSelecionar.removeAllItems();
+        listaCursos = cursoDAO.listarTodos(); // Atualiza a lista de cursos da classe
+        for (Curso curso : listaCursos) {
+            cbCursoSelecionar.addItem(curso.getNome());
+        }
     }
 
     private void atualizarTabela() {
@@ -103,6 +113,9 @@ public class JanelaCurso extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtConsultaCurso = new javax.swing.JTextField();
         bntConsultarCurso = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        cbCursoSelecionar = new javax.swing.JComboBox<>();
+        bntverAlunos = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -220,6 +233,20 @@ public class JanelaCurso extends javax.swing.JFrame {
             }
         });
         getContentPane().add(bntConsultarCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 290, -1, -1));
+
+        jLabel5.setText("ver curso");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 280, 50, -1));
+
+        cbCursoSelecionar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(cbCursoSelecionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 280, -1, -1));
+
+        bntverAlunos.setText("jButton1");
+        bntverAlunos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntverAlunosActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bntverAlunos, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 310, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -384,6 +411,10 @@ public class JanelaCurso extends javax.swing.JFrame {
 
     }//GEN-LAST:event_bntConsultarCursoActionPerformed
 
+    private void bntverAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntverAlunosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bntverAlunosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -449,11 +480,14 @@ public class JanelaCurso extends javax.swing.JFrame {
     private javax.swing.JButton bntNovo;
     private javax.swing.JButton bntReativar;
     private javax.swing.JButton bntSalvar;
+    private javax.swing.JButton bntverAlunos;
+    private javax.swing.JComboBox<String> cbCursoSelecionar;
     private javax.swing.JCheckBox chkAtivo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
