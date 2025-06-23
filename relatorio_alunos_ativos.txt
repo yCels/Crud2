@@ -1,6 +1,0 @@
-Curso: historia
-  Nenhum aluno ativo neste curso.
-
-Curso: portugues
-  Nenhum aluno ativo neste curso.
-
